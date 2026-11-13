@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ToxSec Cybersecurity 101 Map</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Patrick+Hand&family=Permanent+Marker&display=swap">
+<style>
+/* Layout: exact replica of the 1672x941 poster, drawn in poster pixels on a stage that scales to the window. Below ~1040px it stacks into one column. */
+:root {
+  --bg: #0a0c09;
+  --panel: #0d100c;
+  --lime: #b8f23c;
+  --lime-ink: #0a0c09;
+  --teal: #55e8c8;
+  --fg: #f3f6ee;
+  --dim: #8f9a88;
+  --display: "Permanent Marker", "Marker Felt", "Comic Sans MS", cursive;
+  --hand: "Patrick Hand", "Segoe Print", "Comic Sans MS", sans-serif;
+  --script: "Caveat", "Segoe Script", cursive;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--hand);
+  padding-block: 14px 28px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.page { max-width: 1672px; margin: 0 auto; }
+.tip { text-align: center; color: var(--dim); font-size: 17px; margin: 0 0 10px; }
+.viewport { position: relative; width: 100%; }
+button { font-family: inherit; }
+:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+/* ---------- Stage ---------- */
+.stage { position: relative; }
+.stage:not(.stack) { position: absolute; left: 0; top: 0; width: 1672px; height: 941px; transform-origin: 0 0; }
+.stage.stack { display: flex; flex-direction: column; gap: 18px; max-width: 640px; margin: 0 auto; }
+.stage:not(.stack) > * { position: absolute; }
+.stage.stack .deco { display: none; }
+
+/* title */
+.title { margin: 0; font-weight: 400; display: flex; align-items: center; justify-content: center; gap: 18px; left: 0; top: 0; width: 1672px; height: 72px; white-space: nowrap; }
+.title .t1 { font-family: var(--display); color: var(--lime); font-size: 68px; line-height: 1; }
+.title .t2 { font-family: var(--hand); font-weight: 700; color: var(--fg); font-size: 62px; line-height: 1; -webkit-text-stroke: 1.5px var(--fg); }
+.title svg { width: 92px; height: 92px; }
+.subtitle { left: 0; top: 64px; width: 1672px; text-align: center; font-family: var(--script); font-size: 42px; color: var(--teal); margin: 0; line-height: 1.1; }
+.stage.stack .title { order: 0; width: auto; height: auto; flex-wrap: wrap; white-space: normal; gap: 8px 14px; }
+.stage.stack .title .t1 { font-size: 40px; }
+.stage.stack .title .t2 { font-size: 34px; }
+.stage.stack .title svg { width: 56px; height: 56px; }
+.stage.stack .subtitle { order: 0; width: auto; font-size: 30px; margin-top: -10px; }
+
+/* wobbly hand-drawn borders */
+.frame, .box::before, .banner::before { filter: url(#wob); }
+
+/* ---------- Boxes ---------- */
+.box {
+  background: var(--panel); cursor: pointer; display: grid; grid-template-columns: 142px 1fr;
+  border-radius: 24px; -webkit-tap-highlight-color: transparent; min-width: 0;
+}
+.box::before { content: ""; position: absolute; inset: 0; border: 3.5px solid var(--lime); border-radius: 22px 26px 20px 28px / 26px 20px 28px 22px; pointer-events: none; }
+.box:hover { background: #12160f; }
+.box .pill {
+  position: absolute; left: 47px; top: 5px; font-family: var(--display); background: var(--lime); color: var(--lime-ink);
+  padding: 2px 14px 4px; border-radius: 8px 12px 7px 13px; font-size: 27px; line-height: 1.2; white-space: nowrap; z-index: 1;
+}
+.box .pill.up { text-transform: uppercase; font-size: 25px; left: 145px; }
+.box .ico { width: 82px; height: 82px; }
+.box .icocell { display: grid; place-items: center; }
+.box .lists { display: contents; }
+.box ul { list-style: none; margin: 0; padding: 0 12px 0 20px; display: flex; flex-direction: column; gap: 0; border-left: 2px solid rgba(184,242,60,.55); margin-block: 47px 4px; }
+.box li { font-size: 20px; line-height: 21px; position: relative; padding-left: 20px; visibility: hidden; opacity: 0; }
+.box li.on { visibility: visible; opacity: 1; animation: pop .35s ease both; }
+.box li::before { content: ""; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--lime); }
+.box li.ask { color: var(--teal); }
+.box li.ask::before { content: "→"; background: none; width: auto; height: auto; top: -1px; font-size: 20px; color: var(--teal); }
+.box .tap { position: absolute; left: 170px; top: 72px; color: var(--dim); font-size: 19px; font-style: italic; }
+.box.started .tap { display: none; }
+.box .ctl { position: absolute; right: 16px; top: 9px; display: flex; gap: 8px; align-items: center; z-index: 1; }
+.count { color: var(--dim); font-size: 16px; font-variant-numeric: tabular-nums; }
+.mini { font-size: 16px; color: var(--lime); background: var(--panel); border: 1.5px solid var(--lime); border-radius: 999px; padding: 0 12px; line-height: 22px; cursor: pointer; }
+.mini:hover { background: var(--lime); color: var(--lime-ink); }
+@keyframes pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* positions */
+#b-identity { left: 15px; top: 93px; width: 510px; height: 167px; }
+#b-apps { left: 15px; top: 275px; width: 510px; height: 157px; }
+#b-ai { left: 15px; top: 447px; width: 500px; height: 158px; }
+#b-data { left: 1143px; top: 93px; width: 514px; height: 165px; }
+#b-infra { left: 1143px; top: 272px; width: 514px; height: 158px; }
+#b-detect { left: 1143px; top: 445px; width: 514px; height: 158px; }
+#b-threat { left: 12px; top: 625px; width: 797px; height: 196px; grid-template-columns: 140px 392px 1fr; }
+#b-owasp { left: 822px; top: 625px; width: 838px; height: 196px; grid-template-columns: 118px 340px 1fr; }
+#b-threat .ico { width: 78px; height: 78px; }
+#b-threat .tap { left: 165px; top: 76px; }
+#b-owasp .tap { left: 145px; top: 76px; }
+#b-threat ul, #b-owasp ul { margin-block: 48px 10px; }
+#b-infra .pill { font-size: 23px; }
+#b-threat ul.nums li, #b-owasp ul li { padding-left: 0; }
+#b-threat ul.nums li::before, #b-owasp ul li::before { display: none; }
+#b-threat ul.nums, #b-owasp ul:first-of-type { border-left: 0; }
+#b-threat ul.nums { gap: 0; margin-left: 0; padding-left: 20px; }
+#b-threat ul.nums li { line-height: 23px; font-size: 21px; }
+#b-threat ul.stride { padding-left: 18px; margin-top: 46px; }
+#b-threat ul.stride li { padding-left: 0; line-height: 21px; font-size: 20px; }
+#b-threat ul.stride li::before { display: none; }
+.num { display: inline-grid; place-items: center; width: 21px; height: 21px; border-radius: 50%; background: var(--lime); color: var(--lime-ink); font-family: var(--display); font-size: 13px; margin-right: 14px; vertical-align: 1px; line-height: 1; }
+.spill { display: inline-block; font-family: var(--display); background: var(--lime); color: var(--lime-ink); padding: 0 10px 1px; border-radius: 6px 9px 6px 10px; font-size: 20px; margin-bottom: 4px; }
+#b-owasp ul { padding-left: 20px; gap: 1px; }
+#b-owasp ul + ul { border-left: 2px solid rgba(184,242,60,.55); }
+#b-owasp li { line-height: 23px; font-size: 21px; white-space: nowrap; }
+.code { font-family: var(--display); color: var(--lime); font-size: 18px; display: inline-block; width: 56px; }
+
+/* triangle */
+.tri { left: 527px; top: 100px; width: 616px; height: 485px; container-type: inline-size; }
+.tri .lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.node {
+  position: absolute; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 1.4cqw;
+  background: none; border: 0; color: var(--fg); cursor: pointer; padding: 0; width: max-content; z-index: 2;
+}
+.node svg { width: 11cqw; height: 11cqw; }
+.node .p { font-family: var(--display); background: var(--lime); color: var(--lime-ink); font-size: 3.7cqw; line-height: 1.15; padding: .2cqw 2.4cqw .5cqw; border-radius: 1.2cqw 1.6cqw 1.1cqw 1.7cqw; }
+.node:hover .p { box-shadow: 0 0 0 .6cqw rgba(184,242,60,.35); }
+.node .q { font-size: 4cqw; line-height: 1.1; visibility: hidden; opacity: 0; }
+.node.on .q { visibility: visible; opacity: 1; animation: pop .35s ease both; }
+.node .slot { display: grid; justify-items: center; align-items: start; }
+.node .slot > * { grid-area: 1 / 1; }
+.node .tapq { font-size: 3.6cqw; line-height: 1.1; font-style: italic; color: var(--teal); }
+.node.on .tapq { display: none; }
+.n-c { left: 50%; top: 10.5%; }
+.n-i { left: 26.4%; top: 66%; }
+.n-a { left: 74.2%; top: 66%; }
+.n-i .p, .n-a .p { font-size: 3.5cqw; }
+.sticker {
+  position: absolute; left: 50.8%; top: 58.8%; transform: translate(-50%, -50%) rotate(-2deg); text-align: center;
+  font-family: var(--display); font-size: 9.4cqw; line-height: .92; color: var(--lime-ink); padding: 1.4cqw 3.6cqw 1.8cqw; z-index: 1;
+}
+.sticker::before { content: ""; position: absolute; inset: 0; background: var(--lime); border-radius: 3cqw 4cqw 3.2cqw 3.6cqw / 3.4cqw 3cqw 4cqw 3cqw; filter: url(#wob2); z-index: -1; }
+.stage.stack .tri { order: 1; width: 100%; max-width: 460px; margin: 0 auto; aspect-ratio: 616 / 485; height: auto; position: relative; }
+
+/* banner */
+.banner {
+  left: 65px; top: 833px; width: 1545px; height: 56px; background: var(--lime); color: var(--lime-ink); cursor: pointer;
+  border-radius: 18px 24px 16px 22px / 22px 16px 24px 18px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--hand); font-weight: 700; font-size: 30px; white-space: nowrap; letter-spacing: -.2px; -webkit-text-stroke: .6px var(--lime-ink);
+}
+.banner:hover { background: #c6f75a; }
+.banner .steps { display: inline-flex; gap: 0; }
+.banner .s { visibility: hidden; opacity: 0; margin-left: 10px; }
+.banner .s.on { visibility: visible; opacity: 1; animation: pop .35s ease both; }
+.banner .s + .s::before { content: "→ "; }
+.banner .tap2 { position: absolute; left: 330px; font-size: 20px; font-style: italic; font-weight: 400; color: #3a4a12; -webkit-text-stroke: 0; }
+.banner.started .tap2 { display: none; }
+.banner .ctl { position: absolute; right: 10px; top: 15px; display: flex; gap: 8px; align-items: center; -webkit-text-stroke: 0; font-weight: 400; }
+.banner .count { display: none; }
+.banner .mini { background: var(--lime); color: var(--lime-ink); border-color: var(--lime-ink); }
+.banner .mini:hover { background: var(--lime-ink); color: var(--lime); }
+.banner::before { display: none; }
+.stage.stack .banner { white-space: normal; flex-wrap: wrap; height: auto; padding: 14px 16px 36px; justify-content: flex-start; font-size: 22px; position: relative; order: 10; }
+.stage.stack .banner .s { display: none; }
+.stage.stack .banner .s.on { display: inline; }
+.stage.stack .banner .steps { flex-wrap: wrap; }
+.stage.stack .banner .tap2 { position: static; margin-left: 10px; }
+
+footer.foot { left: 0; top: 896px; width: 1672px; height: 30px; font-size: 21px; }
+.foot span { position: absolute; top: 4px; white-space: nowrap; }
+.foot .l { left: 67px; }
+.foot .r { right: 66px; }
+.stage.stack .foot { order: 11; width: auto; height: auto; display: flex; flex-direction: column; gap: 4px; font-size: 16px; color: var(--dim); }
+.stage.stack .foot span { position: static; white-space: normal; }
+
+/* stacked boxes */
+.stage.stack .box { position: relative; left: auto; top: auto; width: 100%; height: auto; min-height: 120px; grid-template-columns: 76px 1fr; padding-top: 52px; padding-bottom: 12px; }
+.stage.stack .box .pill, .stage.stack .box .pill.up { left: 16px; font-size: 21px; white-space: normal; max-width: calc(100% - 130px); }
+.stage.stack .box .ico { width: 56px; height: 56px; }
+.stage.stack .box .icocell { align-self: start; grid-row: 1 / span 3; }
+.stage.stack .box ul { margin-block: 0; grid-column: 2; padding-block: 0 4px; }
+.stage.stack .box li { font-size: 19px; }
+.stage.stack .box li:not(.on) { display: none; }
+.stage.stack .box .tap { left: 96px; top: 56px; }
+.stage.stack #b-threat, .stage.stack #b-owasp { grid-template-columns: 76px 1fr; }
+.stage.stack #b-threat ul.stride { margin-top: 8px; border-left: 0; padding-left: 20px; }
+.stage.stack #b-owasp ul + ul { border-left: 0; }
+.stage.stack #b-owasp li { white-space: normal; }
+.stage.stack #b-threat ul.nums, .stage.stack #b-owasp ul { padding-left: 20px; }
+.stage.stack #b-identity { order: 2; } .stage.stack #b-apps { order: 3; } .stage.stack #b-ai { order: 4; }
+.stage.stack #b-data { order: 5; } .stage.stack #b-infra { order: 6; } .stage.stack #b-detect { order: 7; }
+.stage.stack #b-threat { order: 8; } .stage.stack #b-owasp { order: 9; }
+
+/* controls */
+.bar { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+.btn { font-family: var(--display); font-size: 21px; padding: 8px 24px; border-radius: 12px; cursor: pointer; border: 3px solid var(--lime); background: var(--lime); color: var(--lime-ink); }
+.btn.ghost { background: transparent; color: var(--lime); }
+.btn:hover { filter: brightness(1.1); }
+@media (prefers-reduced-motion: reduce) { .box li.on, .node.on .q, .banner .s.on { animation: none; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wob" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
+    <filter id="wob2" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter>
+    <symbol id="i-id" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="14" width="54" height="42" rx="7"/><rect x="22" y="7" width="20" height="11" rx="3"/><circle cx="21" cy="32" r="5.5" style="stroke:#55e8c8;fill:#55e8c8"/><path d="M11 47c1-6 5-8 10-8s9 2 10 8z" style="stroke:#55e8c8;fill:#55e8c8"/><path d="M37 30h15M37 37h15M37 44h10"/></symbol>
+    <symbol id="i-code" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="12" width="42" height="31" rx="4"/><path d="M3 51h58l-3 5H6z"/><path d="M27 21l-7 7 7 7M37 21l7 7-7 7" style="stroke:#55e8c8"/></symbol>
+    <symbol id="i-ai" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="13" y="13" width="38" height="38" rx="5" style="stroke:#b8f23c"/><path d="M22 6v7M32 6v7M42 6v7M22 51v7M32 51v7M42 51v7M6 22h7M6 32h7M6 42h7M51 22h7M51 32h7M51 42h7" style="stroke:#b8f23c"/><path d="M22 42l6-16 6 16M24.500 37h7M40 26v16" style="stroke:#55e8c8"/></symbol>
+    <symbol id="i-db" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="26" cy="13" rx="19" ry="7"/><path d="M7 13v32c0 4 8 7 19 7M7 29c0 4 8 7 19 7M45 13v15"/><rect x="38" y="38" width="22" height="18" rx="3" style="fill:#55e8c8;stroke:#55e8c8"/><path d="M42 38v-4a7 7 0 0 1 14 0v4" style="stroke:#55e8c8"/><circle cx="49" cy="47" r="2.500" style="fill:#0a0c09;stroke:none"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M32 7l25 12-25 12L7 19z"/><path d="M7 31l25 12 25-12" style="stroke:#55e8c8"/><path d="M7 43l25 12 25-12" style="stroke:#55e8c8"/></symbol>
+    <symbol id="i-life" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="25" stroke="#f3f6ee" stroke-width="3"/><circle cx="32" cy="32" r="10" stroke="#f3f6ee" stroke-width="3"/><path d="M14 14l12 12M50 14L38 26M14 50l12-12M50 50L38 38" stroke="#55e8c8" stroke-width="7"/></symbol>
+    <symbol id="i-list" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="12" width="46" height="46" rx="5"/><rect x="22" y="5" width="20" height="11" rx="3"/><path d="M16 28l4 4 7-8M16 40l4 4 7-8M16 52l4 4 7-8" style="stroke:#55e8c8"/><path d="M34 29h14M34 41h14M34 53h10"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M32 5l23 9v16c0 14-9 23-23 29C18 53 9 44 9 30V14z"/><path d="M20 32l9 9 16-19" style="stroke:var(--chk,#55e8c8)" stroke-width="5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="28" width="40" height="30" rx="5" fill="#b8f23c" stroke="#b8f23c"/><path d="M20 28v-8a12 12 0 0 1 24 0v8" stroke="#b8f23c" stroke-width="5"/><circle cx="32" cy="41" r="4.500" fill="#0a0c09"/><path d="M32 43v8" stroke="#0a0c09" stroke-width="3"/></symbol>
+    <symbol id="i-server" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="6" width="46" height="15" rx="3"/><rect x="9" y="24" width="46" height="15" rx="3"/><rect x="9" y="42" width="46" height="15" rx="3"/><path d="M17 13.500h.1M17 31.500h.1M17 49.500h.1M26 13.500h20M26 31.500h20M26 49.500h20" style="stroke:#b8f23c"/></symbol>
+    <symbol id="i-burst" viewBox="0 0 100 100" fill="none" stroke-linecap="round"><g stroke="#b8f23c" stroke-width="7"><path d="M50 4v16M50 80v16M4 50h16M80 50h16M17 17l11 11M72 72l11 11M83 17L72 28M28 72L17 83"/></g><circle cx="50" cy="50" r="24" fill="#b8f23c"/><circle cx="42" cy="42" r="6" fill="#0a0c09"/><circle cx="60" cy="56" r="5" fill="#0a0c09"/></symbol>
+  </defs>
+</svg>
+
+<div class="page">
+  <p class="tip">Click a shape to open it. Keep clicking a box for the next line, or press “all” to show the whole box.</p>
+  <div class="viewport" id="viewport">
+    <div class="stage" id="stage">
+      <h1 class="title"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-burst"/></svg><span class="t1">TOXSEC</span><span class="t2">/ cybersecurity 101</span></h1>
+      <p class="subtitle">a map for better questions</p>
+
+      <svg class="deco" style="left:0;top:0;width:1672px;height:941px;pointer-events:none;filter:url(#wob)" viewBox="0 0 1672 941" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <g stroke="#b8f23c" stroke-width="5">
+          <!-- title sparkles -->
+          <path d="M291 22l28 12M283 46h38M291 70l28-12"/>
+          <path d="M1381 22l-28 12M1389 46h-38M1381 70l-28-12"/>
+          <!-- banner sparkles -->
+          <path d="M28 842l26 8M22 862l34 0M28 882l26-8"/>
+          <path d="M1644 842l-26 8M1650 862h-34M1644 882l-26-8"/>
+          <!-- connectors -->
+          <path d="M525 172C585 172 598 252 650 252L742 252"/>
+          <path d="M525 356L672 356"/>
+          <path d="M515 512C545 512 560 496 582 496"/>
+          <path d="M1147 172C1087 172 1074 252 1022 252L930 252"/>
+          <path d="M1143 356L1000 356"/>
+          <path d="M1143 512C1113 512 1100 496 1090 496"/>
+        </g>
+        <g stroke="#55e8c8" stroke-width="4"><path d="M542 82c18-3 36 2 56 0M1076 82c20 2 40-3 58 0"/></g>
+      </svg>
+
+      <div class="tri" id="tri">
+        <svg class="lines" viewBox="0 0 616 485" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="filter:url(#wob)">
+          <path d="M309 10L610 474H6Z" stroke="#b8f23c" stroke-width="7"/>
+          <path d="M305 358V462" stroke="#b8f23c" stroke-width="5"/>
+          <g stroke="#b8f23c" stroke-width="5"><path d="M182 224l-26-24M170 262l-32-4M186 296l-30 22"/><path d="M444 224l26-24M456 262l32-4M440 296l30 22"/></g>
+        </svg>
+        <div class="sticker">CIA<br>TRIAD</div>
+      </div>
+
+      <div class="banner" id="b-flow" tabindex="0" role="button" aria-label="live review: reveal next step"></div>
+
+      <footer class="foot"><span class="l">OWASP Top 10:2025 &nbsp;•&nbsp; top10.owasp.org/2025 &nbsp;•&nbsp; risk labels condensed</span><span class="r">conversation guide, not an exhaustive audit</span></footer>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button class="btn" id="showAll" type="button">Show everything</button>
+    <button class="btn ghost" id="resetAll" type="button">Reset</button>
+  </div>
+</div>
+
+<script>
+const ico = (id, extra = '') => `<svg class="ico" viewBox="0 0 64 64" aria-hidden="true" ${extra}><use href="#${id}"/></svg>`;
+const OWASP_ITEMS = [['A01','Broken access control'],['A02','Security misconfiguration'],['A03','Software supply chain failures'],['A04','Cryptographic failures'],['A05','Injection'],['A06','Insecure design'],['A07','Authentication failures'],['A08','Software or data integrity failures'],['A09','Security logging and alerting failures'],['A10','Mishandling of exceptional conditions']];
+
+const BOXES = [
+  { id: 'identity', icon: 'i-id', title: 'identity + access', lists: [{ items: ['authentication = who are you?','authorization = what may you do?','MFA • sessions • least privilege','server-side checks • tenant isolation',['ask: can user A access user B’s data?','ask']] }] },
+  { id: 'apps', icon: 'i-code', title: 'apps + APIs', lists: [{ items: ['validate input • encode output','parameterized queries','file uploads • webhooks • SSRF','rate limits • business rules',['ask: what if someone skips the UI?','ask']] }] },
+  { id: 'ai', icon: 'i-ai', title: 'AI + agents', lists: [{ items: ['untrusted content is not authority','limit tools, data and spend','check outputs before acting','confirm consequential actions',['ask: what can it do when it’s wrong?','ask']] }] },
+  { id: 'data', icon: 'i-db', title: 'data + privacy', lists: [{ items: ['collect less • retain less','encrypt in transit + at rest','protect keys, logs and backups','track where data goes',['ask: what must never become public?','ask']] }] },
+  { id: 'infra', icon: 'i-layers', title: 'infrastructure + supply chain', lists: [{ items: ['secure defaults • patching','dependencies • CI/CD permissions','secret storage • key rotation','network boundaries • asset inventory',['ask: what is exposed, and who owns it?','ask']] }] },
+  { id: 'detect', icon: 'i-life', title: 'detection + recovery', lists: [{ items: ['useful logs • actionable alerts','incident owner • response plan','revoke access • contain damage','tested restores • rollback',['ask: how will we notice and recover?','ask']] }] },
+  { id: 'threat', icon: 'i-list', title: 'threat model in 5 questions', up: true, lists: [
+      { cls: 'nums', items: ['what are we building?','what matters, and where does it flow?','what could go wrong?','what will reduce the risk?','how will we verify it?'].map((t, i) => `<span class="num">${i + 1}</span>${t}`) },
+      { cls: 'stride', items: ['<span class="spill">STRIDE:</span><br>spoofing • tampering • repudiation • information disclosure • denial of service • elevation of privilege'] } ] },
+  { id: 'owasp', icon: 'i-shield', title: 'OWASP top 10 / web apps / 2025', up: true, lists: [
+      { items: OWASP_ITEMS.slice(0, 5).map(([c, n]) => `<span class="code">${c}</span>${n}`) },
+      { items: OWASP_ITEMS.slice(5).map(([c, n]) => `<span class="code">${c}</span>${n}`) } ] },
+];
+const FLOW = ['draw the flow','find trust boundaries','try two test accounts','test failure','choose the next fix'];
+const NODES = [
+  { id: 'conf', cls: 'n-c', icon: 'i-lock', label: 'CONFIDENTIALITY', q: 'who can see it?' },
+  { id: 'integ', cls: 'n-i', icon: 'i-shield', label: 'INTEGRITY', q: 'who can change it?', chk: '#b8f23c' },
+  { id: 'avail', cls: 'n-a', icon: 'i-server', label: 'AVAILABILITY', q: 'will it work when needed?' },
+];
+
+const stage = document.getElementById('stage');
+const state = {}, total = {}, els = {};
+
+function buildBox(b) {
+  const n = b.lists.reduce((a, l) => a + l.items.length, 0);
+  total[b.id] = n; state[b.id] = 0;
+  const el = document.createElement('div');
+  el.className = 'box'; el.id = 'b-' + b.id; el.tabIndex = 0; el.setAttribute('role', 'button');
+  el.setAttribute('aria-label', `${b.title}: reveal next line`);
+  let idx = 0;
+  const lists = b.lists.map(l => `<ul class="${l.cls || ''}">${l.items.map(it => {
+    const [html, cls] = Array.isArray(it) ? it : [it, ''];
+    return `<li data-i="${idx++}" class="${cls}">${html}</li>`;
+  }).join('')}</ul>`).join('');
+  el.innerHTML = `<div class="pill ${b.up ? 'up' : ''}">${b.title}</div>
+    <div class="ctl"><span class="count"></span><button class="mini" type="button">all</button></div>
+    <div class="icocell">${ico(b.icon)}</div>${lists}<div class="tap">click to open</div>`;
+  el.addEventListener('click', () => set(b.id, Math.min(state[b.id] + 1, total[b.id])));
+  el.addEventListener('keydown', e => { if (e.target === el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); el.click(); } });
+  el.querySelector('.mini').addEventListener('click', e => { e.stopPropagation(); set(b.id, state[b.id] >= total[b.id] ? 0 : total[b.id]); });
+  els[b.id] = el; stage.insertBefore(el, document.getElementById('tri'));
+}
+
+function buildFlow() {
+  const el = document.getElementById('b-flow'); const id = 'flow';
+  total[id] = FLOW.length; state[id] = 0; els[id] = el;
+  el.innerHTML = `<span>live review:</span><span class="steps">${FLOW.map((t, i) => `<span class="s" data-i="${i}">${t}</span>`).join('')}</span><span class="tap2">click to start</span>
+    <span class="ctl"><span class="count"></span><button class="mini" type="button">all</button></span>`;
+  el.addEventListener('click', () => set(id, Math.min(state[id] + 1, total[id])));
+  el.addEventListener('keydown', e => { if (e.target === el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); el.click(); } });
+  el.querySelector('.mini').addEventListener('click', e => { e.stopPropagation(); set(id, state[id] >= total[id] ? 0 : total[id]); });
+}
+
+function buildNode(n) {
+  total[n.id] = 1; state[n.id] = 0;
+  const el = document.createElement('button');
+  el.type = 'button'; el.className = 'node ' + n.cls;
+  el.innerHTML = `<svg viewBox="0 0 64 64" aria-hidden="true" ${n.chk ? `style="--chk:${n.chk}"` : ''}><use href="#${n.icon}"/></svg><span class="p">${n.label}</span><span class="slot"><span class="q">${n.q}</span><span class="tapq">click to reveal</span></span>`;
+  el.addEventListener('click', () => set(n.id, state[n.id] ? 0 : 1));
+  els[n.id] = el; document.getElementById('tri').appendChild(el);
+}
+
+function paint(id) {
+  const el = els[id], n = state[id];
+  if (el.classList.contains('node')) { el.classList.toggle('on', n > 0); return; }
+  el.classList.toggle('started', n > 0);
+  el.querySelectorAll('[data-i]').forEach(x => x.classList.toggle('on', +x.dataset.i < n));
+  el.querySelector('.count').textContent = n > 0 ? `${n}/${total[id]}` : '';
+  el.querySelector('.mini').textContent = n >= total[id] ? 'hide' : 'all';
+}
+function set(id, n) { state[id] = n; paint(id); }
+
+BOXES.forEach(buildBox); buildFlow(); NODES.forEach(buildNode);
+// stacked order: boxes live before the triangle in the DOM; the stack CSS reorders them
+document.getElementById('showAll').addEventListener('click', () => Object.keys(total).forEach(id => set(id, total[id])));
+document.getElementById('resetAll').addEventListener('click', () => Object.keys(total).forEach(id => set(id, 0)));
+
+// fit poster to window
+const vp = document.getElementById('viewport');
+function fit() {
+  const w = vp.clientWidth, stack = w < 1040;
+  stage.classList.toggle('stack', stack);
+  if (stack) { stage.style.transform = ''; vp.style.height = ''; stage.style.left = ''; return; }
+  const s = Math.min(1, w / 1672);
+  stage.style.transform = `scale(${s})`; stage.style.left = ((w - 1672 * s) / 2) + 'px';
+  vp.style.height = (941 * s) + 'px';
+}
+new ResizeObserver(fit).observe(vp); fit();
+</script>
+</body>
+</html>
